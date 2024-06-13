@@ -14,6 +14,7 @@ export default async function Page({params} : {params : {id : string}}) {
             </div>
         )
     }
+    
 
     const list = await getList(id);
     const session = await getSession();

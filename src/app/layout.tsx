@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Chivo } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { SongProvider } from "./lib/context";
 
 const chiv = Chivo({ subsets: ["latin"] });
 
@@ -12,13 +13,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params
 }: Readonly<{
   children: React.ReactNode;
+  params: {id: string}
 }>) {
+
+  console.log('para',params.id)
   return (
     <html lang="en" data-theme="business">
       <UserProvider>
-        <body className={chiv.className}>{children}</body>
+        <SongProvider>
+          <body className={chiv.className}>{children}</body>
+        </SongProvider>
       </UserProvider>
     </html>
   );

@@ -1,11 +1,12 @@
 'use client'
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { youtube_v3 } from "googleapis";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import YouTubeSongPlayer from "../home/YoutubePlayer";
+import YouTubeSongPlayer from "./YoutubePlayer";
 import { useSearchParams } from "next/navigation";
+import { songContext } from "@/app/lib/context";
 
 export default function MusicList(
   {
@@ -20,37 +21,11 @@ export default function MusicList(
   const params = useSearchParams();
   const playlist_name = params.get('name');
 
+  const {song, 
+    changeSong,
+    handleList} = useContext(songContext)!;
+
   const [list, setList] = useState<youtube_v3.Schema$PlaylistItemListResponse | null>(musicList ?? null);
-  const [song, setSong] = useState<youtube_v3.Schema$PlaylistItem | null>(null);
-
-  const handleSkip = () => {
-    console.log(song?.snippet?.position! + 1)
-    setSong(prev => {
-      if(list?.items){
-        return list.items[
-          (prev?.snippet?.position === list?.pageInfo?.totalResults! - 1) 
-          ? 0 : prev?.snippet?.position! + 1 
-      ]
-      }
-      else{
-        return prev
-      }
-    })
-  }
-
-  const handlePrevious = () => {
-    setSong(prev => {
-      if(list?.items){
-        return list.items[
-          (prev?.snippet?.position === 0) 
-          ? list?.pageInfo?.totalResults! - 1 : prev?.snippet?.position! - 1 
-      ]
-      }
-      else{
-        return prev
-      }
-    })
-  }
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -59,13 +34,17 @@ export default function MusicList(
     })
   }
 
+  const handleContextList = () => {
+    handleList(list);
+  }
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       {/* <div>
         {username }
       </div> */}
       <div className={`grid grid-rows-1 ${(song) ? 'lg:grid-cols-2' : ''} w-full max-w-7xl transition-all ease-in-out m-auto`}>
-        {song && <YouTubeSongPlayer song={song} handleSkip={handleSkip} handlePrevious={handlePrevious}/>}
+        {song && <YouTubeSongPlayer/>}
         <div className="flex flex-col p-2">
           <div className=" p-5">
             <p className="font-medium text-4xl text-pretty truncate">{playlist_name}</p>
@@ -81,7 +60,7 @@ export default function MusicList(
             // </div>
               <div 
                 className="w-full pl-2 py-6 border-b-[1px] hover:bg-[#4E5444] transition-all ease-in-out rounded cursor-pointer"
-                onClick={() => {setSong(im); scrollToTop()}}
+                onClick={() => {changeSong(im); scrollToTop(); handleContextList}}
                 key={im.id as string}
                 >
                 <div className="flex flex-col">
