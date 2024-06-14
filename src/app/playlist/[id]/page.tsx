@@ -1,6 +1,6 @@
 import { getList, hasYouTubeTokenANDValid } from "@/app/actions/youtube.action";
 import MusicList from "@/app/components/playlist/MusicList";
-import Navigation from "@/app/components/home/Nav";
+import Navigation from "@/app/components/Common/Nav";
 import LinkYoutubeButton from "@/app/components/home/YouTubeLink";
 import { getSession } from "@auth0/nextjs-auth0";
 

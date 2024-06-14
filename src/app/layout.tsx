@@ -19,7 +19,6 @@ export default function RootLayout({
   params: {id: string}
 }>) {
 
-  console.log('para',params.id)
   return (
     <html lang="en" data-theme="business">
       <UserProvider>

@@ -4,16 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { redirect } from "next/navigation";
 import {serialize} from 'cookie';
 import { storeGoogleRefreshToken } from "@/app/actions/auth0.action";
-
-const oauth2Client = new google.auth.OAuth2({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirectUri: 'http://localhost:3000/api/google/callback'
-});
+import { createOAuth2Client } from "@/app/lib/youtube";
 
 export async function GET(request: NextRequest) {
   let code;
   let scope;
+
+  const oauth2Client = await createOAuth2Client();
 
   const {searchParams} = request.nextUrl;
 

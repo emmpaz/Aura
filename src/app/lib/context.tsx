@@ -1,14 +1,13 @@
 'use client'
 import { youtube_v3 } from "googleapis";
+import { useRouter } from "next/navigation";
 import { createContext, useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
 
 type initialProps = {
     song: youtube_v3.Schema$PlaylistItem | null,
-    changeSong: (
-        song: youtube_v3.Schema$PlaylistItem | null
-    ) => void,
+    changeSong: (song: youtube_v3.Schema$PlaylistItem | null) => void,
     videoElement: YouTubePlayer,
     changeVideo: (video: YouTubePlayer) => void,
     play: boolean,
@@ -20,6 +19,9 @@ type initialProps = {
     songProgress: { x: number },
     duration: number,
     handleList: (list: youtube_v3.Schema$PlaylistImageListResponse | null) => void
+    handlePlayListName: (name: string) => void,
+    handleOpenToLargePlayer: () => void,
+    resetContext: () => void
 }
 
 export const songContext = createContext<initialProps | null>(null);
@@ -28,14 +30,18 @@ export const SongProvider = ({
     children
 }: { children: React.ReactElement }) => {
 
+    const router = useRouter();
+    //song and playlist details
     const [song, setSong] = useState<youtube_v3.Schema$PlaylistItem | null>(null);
     const [videoElement, SetVideoElement] = useState<YouTubePlayer>(null);
     const [list, setList] = useState<youtube_v3.Schema$PlaylistImageListResponse | null>(null);
+    const [playlistName, setPlaylistName] = useState<string>("");
+
 
     //controls
     const [play, setPlay] = useState(true);
     const [videoLoading, setVideoLoading] = useState(true);
-
+    //for song progress
     const [songProgress, setSongProgress] = useState({ x: 0 });
     const [duration, setDuration] = useState(0);
     const intervalRef = useRef<number | null>(null);
@@ -111,7 +117,7 @@ export const SongProvider = ({
         if(list?.items){
           newSong = list.items[
             (song?.snippet?.position === 0) 
-            ? list?.pageInfo?.totalResults! - 1 : song?.snippet?.position! + 1 
+            ? list?.pageInfo?.totalResults! - 1 : song?.snippet?.position! - 1 
           ];
         }else{
           newSong = song as youtube_v3.Schema$PlaylistItem;
@@ -151,16 +157,33 @@ export const SongProvider = ({
         }
     }
 
-
-
-    const changeSong = (song: youtube_v3.Schema$PlaylistItem | null) => {
-        setSong(song)
+    const handleOpenToLargePlayer = () => {
+        const playlistId = list?.items![0].snippet?.playlistId as string ?? "";
+        const params = new URLSearchParams({
+            name : playlistName
+        })
+        router.push(`/playlist/${playlistId}?${params}`);
     }
+
+    const resetContext = () => {
+        setSong(null);
+        SetVideoElement(null);
+        setList(null);
+        setPlaylistName("null");
+        setDuration(0);
+        setSongProgress({x : 0})
+        intervalRef.current = null;
+    }
+
+
+
+    const changeSong = (song: youtube_v3.Schema$PlaylistItem | null) => setSong(song)
 
     const changeVideo = (video: YouTubePlayer) => SetVideoElement(video);
 
     const handleList = (list : youtube_v3.Schema$PlaylistImageListResponse | null) => setList(list);
 
+    const handlePlayListName = (name : string) => setPlaylistName(name);
 
     const opts = {
         height: "0",
@@ -183,7 +206,10 @@ export const SongProvider = ({
         handlePrevious,
         songProgress,
         duration,
-        handleList
+        handleList,
+        handlePlayListName,
+        handleOpenToLargePlayer,
+        resetContext
     }
 
     return (

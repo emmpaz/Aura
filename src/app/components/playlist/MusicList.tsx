@@ -4,14 +4,13 @@ import YouTube, { YouTubePlayer } from "react-youtube";
 import { youtube_v3 } from "googleapis";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import YouTubeSongPlayer from "./YoutubePlayer";
+import YouTubeSongPlayer from "../Players/YoutubePlayer";
 import { useSearchParams } from "next/navigation";
 import { songContext } from "@/app/lib/context";
 
 export default function MusicList(
   {
   musicList,
-  username,
 } : {
   musicList: youtube_v3.Schema$PlaylistItemListResponse | null,
   username: string
@@ -20,10 +19,12 @@ export default function MusicList(
 
   const params = useSearchParams();
   const playlist_name = params.get('name');
-
+  
   const {song, 
     changeSong,
-    handleList} = useContext(songContext)!;
+    handleList, handlePlayListName} = useContext(songContext)!;
+
+    handlePlayListName(playlist_name ?? "");
 
   const [list, setList] = useState<youtube_v3.Schema$PlaylistItemListResponse | null>(musicList ?? null);
 
@@ -60,7 +61,11 @@ export default function MusicList(
             // </div>
               <div 
                 className="w-full pl-2 py-6 border-b-[1px] hover:bg-[#4E5444] transition-all ease-in-out rounded cursor-pointer"
-                onClick={() => {changeSong(im); scrollToTop(); handleContextList}}
+                onClick={() => {
+                  changeSong(im); 
+                  scrollToTop(); 
+                  handleContextList();
+                }}
                 key={im.id as string}
                 >
                 <div className="flex flex-col">
