@@ -2,5 +2,8 @@
 
 ![logo](./public/logo.svg)
 
-Current state
-![image](./aura-test.png)
+Playing a playlist view
+![img](./aura-test.png)
+
+Homepage (current state)
+![home](./home-page.png)
