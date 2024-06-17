@@ -6,10 +6,12 @@ import { IoAccessibilityOutline } from "react-icons/io5";
 export default function PlaylistList(
     {
         list,
-        genre
+        genre,
+        test
     }: {
         list: youtube_v3.Schema$PlaylistListResponse | null,
         genre: youtube_v3.Schema$PlaylistListResponse | null,
+        test: youtube_v3.Schema$PlaylistListResponse | null
     }
 ) {
     const returnCorrectImage = (playlist: youtube_v3.Schema$Playlist) => {
@@ -52,11 +54,29 @@ export default function PlaylistList(
         list &&
         <div className="w-full flex flex-col pb-10">
             <div className="px-5 py-10">
-                <div>
-                    <h1 className="text-7xl font-medium">Mixes</h1>
+                <div className="text-7xl font-medium">
+                    <h1>Get to work</h1>
                 </div>
                 <div className="flex overflow-y-auto no-scrollbar relative">
                     {genre?.items?.map((playlist) => (
+                        <div className="flex flex-col mx-5" key={playlist.id as string}>
+                            {returnCorrectImage(playlist)}
+                            <div className="m-auto">
+                                <p>{playlist.snippet?.title}</p>
+                            </div>
+                        </div>
+                    ))}
+                    <div className="">
+                        <IoAccessibilityOutline size={35}/>
+                    </div>
+                </div>
+            </div>
+            <div className="px-5 py-10">
+                <div className="text-7xl font-medium">
+                    <h1>Popular</h1>
+                </div>
+                <div className="flex overflow-y-auto no-scrollbar relative">
+                    {test?.items?.map((playlist) => (
                         <div className="flex flex-col mx-5" key={playlist.id as string}>
                             {returnCorrectImage(playlist)}
                             <div className="m-auto">

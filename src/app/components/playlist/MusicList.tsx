@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import YouTubeSongPlayer from "../Players/YoutubePlayer";
 import { useSearchParams } from "next/navigation";
-import { songContext } from "@/app/lib/context";
+import { songContext } from "@/app/lib/SongContext";
 
 export default function MusicList(
   {
@@ -24,8 +24,6 @@ export default function MusicList(
     changeSong,
     handleList, handlePlayListName} = useContext(songContext)!;
 
-    handlePlayListName(playlist_name ?? "");
-
   const [list, setList] = useState<youtube_v3.Schema$PlaylistItemListResponse | null>(musicList ?? null);
 
   const scrollToTop = () => {
@@ -34,6 +32,10 @@ export default function MusicList(
       behavior: 'smooth'
     })
   }
+
+  useEffect(() => {
+    handlePlayListName(playlist_name ?? "");
+  }, [playlist_name])
 
   const handleContextList = () => {
     handleList(list);

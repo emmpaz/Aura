@@ -1,7 +1,7 @@
 'use client'
 import { youtube_v3 } from "googleapis";
 import { useRouter } from "next/navigation";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
 
@@ -183,7 +183,7 @@ export const SongProvider = ({
 
     const handleList = (list : youtube_v3.Schema$PlaylistImageListResponse | null) => setList(list);
 
-    const handlePlayListName = (name : string) => setPlaylistName(name);
+    const handlePlayListName = useCallback((name : string) => setPlaylistName(name), []);
 
     const opts = {
         height: "0",
