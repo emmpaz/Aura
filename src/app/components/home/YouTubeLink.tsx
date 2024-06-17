@@ -17,7 +17,7 @@ export default function LinkYoutube(){
     return (
         <div className="flex flex-1 w-full justify-center flex-col items-center">
           <div className="w-1/2">
-            <img src='../../../../public/logo.svg' alt="logo-large"/>
+            <img src='/logo.svg' alt="logo-large"/>
           </div>
           <div className="mt-10">
             <button onClick={refreshPage} className="btn btn-primary rounded">
