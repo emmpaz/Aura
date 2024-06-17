@@ -3,7 +3,6 @@
 import { useUser } from "@auth0/nextjs-auth0/client"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import logo from '../../../../public/logo.svg';
 
 export default function LinkYoutube(){
     const router = useRouter();
@@ -18,7 +17,7 @@ export default function LinkYoutube(){
     return (
         <div className="flex flex-1 w-full justify-center flex-col items-center">
           <div className="w-1/2">
-            <img src={logo} alt="logo-large"/>
+            <img src='../../../../public/logo.svg' alt="logo-large"/>
           </div>
           <div className="mt-10">
             <button onClick={refreshPage} className="btn btn-primary rounded">
