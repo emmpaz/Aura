@@ -2,7 +2,8 @@
 
 import { songContext } from "@/app/lib/context"
 import { useContext } from "react"
-import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowUp, IoMdPause, IoMdPlay } from "react-icons/io";
+import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
 
 export default function BottomPlayer() {
@@ -11,9 +12,33 @@ export default function BottomPlayer() {
         song,
         songProgress,
         duration,
+        play,
+        videoLoading,
         handleSeek,
-        handleOpenToLargePlayer
+        handleOpenToLargePlayer,
+        handleTogglePlay,
+        handlePrevious,
+        handleSkip
     } = useContext(songContext)!;
+
+    const control = () => {
+        if (play) {
+            return (
+                <IoMdPause
+                    className="mx-10 p-1 active:shadow-none cursor-pointer"
+                    size={40}
+                    onClick={handleTogglePlay} />
+            )
+        } else {
+            return (
+                <IoMdPlay
+                    className="mx-10 p-1 active:shadow-none cursor-pointer"
+                    size={40}
+                    onClick={handleTogglePlay}
+                />
+            )
+        }
+    }
 
 
     return (
@@ -34,8 +59,25 @@ export default function BottomPlayer() {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-end">
-                    <div className="w-full pb-3">
+                <div className="grid">
+                    <div className=" place-self-center w-full">
+                        <div className=" flex justify-center mt-1">
+                                <MdOutlineKeyboardDoubleArrowLeft 
+                                    className="cursor-pointer" 
+                                    size={40} 
+                                    onClick={handlePrevious}/>
+                                {(!videoLoading) ? 
+                                    control() 
+                                    :
+                                    <span className="loading loading-spinner loading-lg mx-4"></span>
+                                }
+                                <MdOutlineKeyboardDoubleArrowRight 
+                                    className="cursor-pointer" 
+                                    size={40} 
+                                    onClick={handleSkip}/>
+                            </div>
+                    </div>
+                    <div className="w-full pb-3 place-self-end">
                         <input
                             type="range"
                             min={0}

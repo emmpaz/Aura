@@ -1,5 +1,6 @@
 import { youtube_v3 } from "googleapis";
 import Link from "next/link";
+import { IoAccessibilityOutline } from "react-icons/io5";
 
 
 export default function PlaylistList(
@@ -54,7 +55,7 @@ export default function PlaylistList(
                 <div>
                     <h1 className="text-7xl font-medium">Mixes</h1>
                 </div>
-                <div className="flex overflow-y-auto no-scrollbar">
+                <div className="flex overflow-y-auto no-scrollbar relative">
                     {genre?.items?.map((playlist) => (
                         <div className="flex flex-col mx-5" key={playlist.id as string}>
                             {returnCorrectImage(playlist)}
@@ -63,6 +64,9 @@ export default function PlaylistList(
                             </div>
                         </div>
                     ))}
+                    <div className="">
+                        <IoAccessibilityOutline size={35}/>
+                    </div>
                 </div>
             </div>
             <div className="px-5 py-10">
