@@ -1,6 +1,5 @@
 'use client'
 import { deleteGoogleRefreshToken } from "@/app/actions/auth0.action"
-import Image from "next/image"
 import { FaSignOutAlt, FaUnlink } from "react-icons/fa"
 import LinkYoutubeButton from "../home/YouTubeLink"
 import { useRouter } from "next/navigation"
@@ -32,7 +31,7 @@ export default function Navigation({
         <div className={` h-28 grid ${(isLinked) ? 'grid-cols-3' : 'grid-cols-2'}`}>
             <div className="ml-10 justify-self-start self-center">
                 <Link href={'/'}>
-                    <Image src='/logo.png' width={40} height={40} alt="logo" />
+                    <img src='/logo.png' width={40} height={40} alt="logo" />
                 </Link>
             </div>
             {isLinked &&
