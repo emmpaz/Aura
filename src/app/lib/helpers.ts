@@ -5,7 +5,7 @@ export const correctImage = (
     playlistItemThumbnail: youtube_v3.Schema$ThumbnailDetails,
     fromSearch: string | null,
 ) => {
-    if(!fromSearch){
+    if(!fromSearch || !playlistItemThumbnail){
         if(thumbnails.maxres) return thumbnails.maxres.url;
 
         if(thumbnails.standard) return thumbnails.standard.url;

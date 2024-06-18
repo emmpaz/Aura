@@ -45,6 +45,18 @@ export default function YouTubeSongPlayer() {
         }
     }
 
+    const getThumbnail = () => {
+        if(fromSearch && contextList?.items && contextList.items.length > 0){
+            return correctImage(
+                song?.snippet?.thumbnails!,
+                contextList.items[0].snippet?.thumbnails!,
+                fromSearch
+            )
+        }
+
+        return correctImage(song?.snippet?.thumbnails!, {} as youtube_v3.Schema$ThumbnailDetails, null);
+    }
+
 
     return (
         <div className="">
@@ -54,8 +66,7 @@ export default function YouTubeSongPlayer() {
                         <div className="mx-auto overflow-hidden w-[400px] h-[400px] m-4 rounded-xl relative">
                             <img
                                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-[707px] max-w-none"
-                                src={correctImage(song.snippet?.thumbnails!, 
-                                    contextList?.items![0].snippet?.thumbnails!, fromSearch) as string}
+                                src={getThumbnail() as string}
                             />
                         </div>
                         <div className="pb-8 text-center">
