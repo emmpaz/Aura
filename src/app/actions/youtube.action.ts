@@ -141,12 +141,41 @@ export const searchYoutube = async (input : string) => {
     const res = await youtube.search.list({
         part:['snippet'],
         q: input,
-        type: ['playlist'],
-        topicId: 'RDCLAK',
-        access_token: access.token
+        type: ['video'],
+        access_token: access.token,
+        maxResults: 10
     })
 
-    res.data.items?.map((im) => console.log(im.id));
+    return res.data;
+}
+
+export const generateNewPlaylist = async (videoID : string) => {
+    const refresh = await getRefreshTokenFromMetaData();
+    const oauth2Client = await createOAuth2Client();
+
+    if(!refresh) return null;
+
+    const youtube = google.youtube({
+        version: 'v3',
+      });
+    
+    let access;
+    try{
+        oauth2Client.setCredentials({refresh_token: refresh ?? ""});
+        access = await oauth2Client.getAccessToken();
+    }catch(error){
+        return null
+    }
+
+    if(!access.token) return null;
+
+    const res = await youtube.playlists.list({
+        id: [`RD${videoID}`],
+        maxResults: 1000,
+        access_token: access.token,
+    })
+
+    return res.data;
 }
 
 

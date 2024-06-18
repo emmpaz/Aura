@@ -19,6 +19,7 @@ export default function MusicList(
 
   const params = useSearchParams();
   const playlist_name = params.get('name');
+  const fromSearch = params.get('fromSearch');
   
   const {song, 
     changeSong,
@@ -35,6 +36,7 @@ export default function MusicList(
 
   useEffect(() => {
     handlePlayListName(playlist_name ?? "");
+    if(fromSearch) handleList(list)
   }, [playlist_name])
 
   const handleContextList = () => {

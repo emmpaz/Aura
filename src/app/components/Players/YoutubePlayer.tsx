@@ -1,12 +1,22 @@
 'use client'
 import { songContext } from "@/app/lib/SongContext";
+import { correctImage } from "@/app/lib/helpers";
+import { youtube_v3 } from "googleapis";
+import { useSearchParams } from "next/navigation";
 import { useContext} from "react";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 
 export default function YouTubeSongPlayer() {
+
+
+    const params = useSearchParams();
+    const fromSearch = params.get('fromSearch');
+
     const { 
-        song, play, 
+        song, 
+        contextList,
+        play,
         handleTogglePlay, 
         videoLoading,
         handleSeek,
@@ -44,10 +54,8 @@ export default function YouTubeSongPlayer() {
                         <div className="mx-auto overflow-hidden w-[400px] h-[400px] m-4 rounded-xl relative">
                             <img
                                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-[707px] max-w-none"
-                                src={
-                                    (song.snippet?.thumbnails?.maxres) ?
-                                        song.snippet.thumbnails.maxres.url as string : song.snippet?.thumbnails?.standard?.url as string
-                                }
+                                src={correctImage(song.snippet?.thumbnails!, 
+                                    contextList?.items![0].snippet?.thumbnails!, fromSearch) as string}
                             />
                         </div>
                         <div className="pb-8 text-center">

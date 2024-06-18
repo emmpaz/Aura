@@ -1,6 +1,7 @@
 'use client'
 
 import { songContext } from "@/app/lib/SongContext"
+import { youtube_v3 } from "googleapis";
 import { useContext } from "react"
 import { IoIosArrowUp, IoMdPause, IoMdPlay } from "react-icons/io";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
@@ -40,6 +41,18 @@ export default function BottomPlayer() {
         }
     }
 
+    const correctImage = (thumbnails : youtube_v3.Schema$ThumbnailDetails) => {
+        if(thumbnails.maxres) return thumbnails.maxres.url;
+
+        if(thumbnails.standard) return thumbnails.standard.url;
+
+        if(thumbnails.high?.url) return thumbnails.high.url;
+
+        if(thumbnails.medium?.url) return thumbnails.medium.url;
+
+        return thumbnails.default?.url ?? "";
+    }
+
 
     return (
         song &&
@@ -49,7 +62,7 @@ export default function BottomPlayer() {
                     <div className="mx-auto overflow-hidden w-[64px] h-[64px] m-4 rounded-xl relative">
                         <img
                             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-[113px] max-w-none"
-                            src={song.snippet?.thumbnails?.maxres?.url as string}
+                            src={correctImage(song.snippet?.thumbnails!) as string}
                         />
                     </div>
                     <div className="ml-2 max-w-lg border">

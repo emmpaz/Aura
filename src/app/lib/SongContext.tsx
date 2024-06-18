@@ -7,6 +7,7 @@ import YouTube, { YouTubePlayer } from "react-youtube";
 
 type initialProps = {
     song: youtube_v3.Schema$PlaylistItem | null,
+    contextList: youtube_v3.Schema$PlaylistItemListResponse | null,
     changeSong: (song: youtube_v3.Schema$PlaylistItem | null) => void,
     videoElement: YouTubePlayer,
     changeVideo: (video: YouTubePlayer) => void,
@@ -18,7 +19,7 @@ type initialProps = {
     handlePrevious: () => void,
     songProgress: { x: number },
     duration: number,
-    handleList: (list: youtube_v3.Schema$PlaylistImageListResponse | null) => void
+    handleList: (list: youtube_v3.Schema$PlaylistItemListResponse | null) => void
     handlePlayListName: (name: string) => void,
     handleOpenToLargePlayer: () => void,
     resetContext: () => void
@@ -34,7 +35,7 @@ export const SongProvider = ({
     //song and playlist details
     const [song, setSong] = useState<youtube_v3.Schema$PlaylistItem | null>(null);
     const [videoElement, SetVideoElement] = useState<YouTubePlayer>(null);
-    const [list, setList] = useState<youtube_v3.Schema$PlaylistImageListResponse | null>(null);
+    const [list, setList] = useState<youtube_v3.Schema$PlaylistItemListResponse | null>(null);
     const [playlistName, setPlaylistName] = useState<string>("");
 
 
@@ -181,7 +182,7 @@ export const SongProvider = ({
 
     const changeVideo = (video: YouTubePlayer) => SetVideoElement(video);
 
-    const handleList = (list : youtube_v3.Schema$PlaylistImageListResponse | null) => setList(list);
+    const handleList = (list : youtube_v3.Schema$PlaylistItemListResponse | null) => setList(list);
 
     const handlePlayListName = useCallback((name : string) => setPlaylistName(name), []);
 
@@ -195,6 +196,7 @@ export const SongProvider = ({
 
     const value = {
         song,
+        contextList : list,
         changeSong,
         videoElement,
         changeVideo,
@@ -209,7 +211,7 @@ export const SongProvider = ({
         handleList,
         handlePlayListName,
         handleOpenToLargePlayer,
-        resetContext
+        resetContext,
     }
 
     return (
