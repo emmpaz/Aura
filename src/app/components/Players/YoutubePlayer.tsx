@@ -1,13 +1,14 @@
 'use client'
-import { songContext } from "@/app/lib/SongContext";
+import { useSongContext } from "@/app/lib/SongContext";
 import { correctImage } from "@/app/lib/helpers";
 import { youtube_v3 } from "googleapis";
 import { useSearchParams } from "next/navigation";
-import { useContext} from "react";
+import { memo, useContext, useMemo} from "react";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import ProgressBar from "../Miscillanious/ProgressBar";
 
-export default function YouTubeSongPlayer() {
+const YouTubeSongPlayer = memo(() => {
 
 
     const params = useSearchParams();
@@ -19,11 +20,8 @@ export default function YouTubeSongPlayer() {
         play,
         handleTogglePlay, 
         videoLoading,
-        handleSeek,
-        songProgress,
-        duration,
         handlePrevious,
-        handleSkip} = useContext(songContext)!;
+        handleSkip} = useSongContext();
 
 
     const control = () => {
@@ -45,7 +43,9 @@ export default function YouTubeSongPlayer() {
         }
     }
 
-    const getThumbnail = () => {
+    console.log('dsadasds');
+
+    const getThumbnail = useMemo(() => {
         if(fromSearch && contextList?.items && contextList.items.length > 0){
             return correctImage(
                 song?.snippet?.thumbnails!,
@@ -55,7 +55,7 @@ export default function YouTubeSongPlayer() {
         }
 
         return correctImage(song?.snippet?.thumbnails!, {} as youtube_v3.Schema$ThumbnailDetails, null);
-    }
+    }, [fromSearch, contextList, song]);
 
 
     return (
@@ -66,7 +66,7 @@ export default function YouTubeSongPlayer() {
                         <div className="mx-auto overflow-hidden w-[400px] h-[400px] m-4 rounded-xl relative">
                             <img
                                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-auto w-[707px] max-w-none"
-                                src={getThumbnail() as string}
+                                src={getThumbnail as string}
                             />
                         </div>
                         <div className="pb-8 text-center">
@@ -74,14 +74,7 @@ export default function YouTubeSongPlayer() {
                             <p>{song.snippet?.videoOwnerChannelTitle?.replace('- Topic', '')}</p>
                         </div>
                         <div className="w-full">
-                            <input 
-                                type="range"
-                                min={0}
-                                value={songProgress.x}
-                                max={duration}
-                                onChange={handleSeek}
-                                className="w-full range range-xs bg-background range-primary"
-                                />
+                            <ProgressBar/>
                         </div>
                         <div className="w-full flex justify-center mb-10 mt-4">
                             <MdOutlineKeyboardDoubleArrowLeft 
@@ -102,4 +95,6 @@ export default function YouTubeSongPlayer() {
                 </div>)}
         </div>
     )
-}
+});
+
+export default YouTubeSongPlayer;

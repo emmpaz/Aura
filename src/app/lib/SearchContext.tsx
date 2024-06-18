@@ -16,7 +16,7 @@ type initialProps = {
     handleNewPlaylist: (songID : string, name : string) => void,
 }
 
-export const SearchContext = createContext<null | initialProps>(null);
+const SearchContext = createContext<null | initialProps>(null);
 
 
 export const SearchProvider = ({
@@ -68,4 +68,12 @@ export const SearchProvider = ({
         </SearchContext.Provider>
     )
 
+}
+
+export const useSearchContext = () => {
+    const context = useContext(SearchContext);
+
+    if(context === null) throw new Error('Have to use within the search context');
+
+    return context;
 }

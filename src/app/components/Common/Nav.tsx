@@ -4,8 +4,8 @@ import { FaSignOutAlt, FaUnlink } from "react-icons/fa"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useContext } from "react"
-import { songContext } from "@/app/lib/SongContext"
-import { SearchContext } from "@/app/lib/SearchContext"
+import { useSongContext } from "@/app/lib/SongContext"
+import { useSearchContext } from "@/app/lib/SearchContext"
 
 
 
@@ -19,12 +19,12 @@ export default function Navigation({
 
     const {
         resetContext
-    } = useContext(songContext)!;
+    } = useSongContext();
 
     const {
         handleSearchValue,
         searchResult,
-    } = useContext(SearchContext)!;
+    } = useSearchContext();
 
 
     const handleUnLink = async () => {

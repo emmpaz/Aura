@@ -1,7 +1,7 @@
 'use client'
 import { youtube_v3 } from "googleapis";
 import { useRouter } from "next/navigation";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 
 
@@ -14,18 +14,36 @@ type initialProps = {
     play: boolean,
     handleTogglePlay: () => void,
     videoLoading: boolean,
-    handleSeek: (e: React.ChangeEvent<HTMLInputElement>) => void,
     handleSkip: () => void,
     handlePrevious: () => void,
-    songProgress: { x: number },
-    duration: number,
     handleList: (list: youtube_v3.Schema$PlaylistItemListResponse | null) => void
     handlePlayListName: (name: string) => void,
     handleOpenToLargePlayer: () => void,
     resetContext: () => void
 }
 
-export const songContext = createContext<initialProps | null>(null);
+type ProgressinitialProps = {
+    duration: number,
+    songProgress : {
+        x: number
+    },
+    handleSeek: (e: React.ChangeEvent<HTMLInputElement>) => void,
+}
+/**
+ * rules learned
+ * useCallback - will only re-render function depending on function
+ * useMemo - will not re-render if prop/values change
+ * 
+ * every component that consumes a context will refresh even if not using all context values
+ * only components that do not consume the context change
+ * 
+ * We can use the same provider and same states in the provider but use different contexts
+ * this way these contexts will re-render only based off their values they are providing
+ */
+
+const SongProgressContext = createContext<ProgressinitialProps | null>(null);
+
+const SongContext = createContext<initialProps | null>(null);
 
 export const SongProvider = ({
     children
@@ -100,7 +118,7 @@ export const SongProvider = ({
         }
     }
 
-    const handleSkip = () => {
+    const handleSkip = useCallback(() => {
         let newSong: youtube_v3.Schema$PlaylistItem;
         if (list?.items) {
             newSong = list.items[
@@ -111,9 +129,9 @@ export const SongProvider = ({
             newSong = song as youtube_v3.Schema$PlaylistItem;
         }
         changeSong(newSong);
-    }
+    }, [list, song]);
 
-    const handlePrevious = () => {
+    const handlePrevious = useCallback(() => {
         let newSong : youtube_v3.Schema$PlaylistItem;
         if(list?.items){
           newSong = list.items[
@@ -124,16 +142,16 @@ export const SongProvider = ({
           newSong = song as youtube_v3.Schema$PlaylistItem;
         }
         changeSong(newSong);
-    }
+    }, [list, song]);
 
-    const handleTogglePlay = () => {
+    const handleTogglePlay = useCallback(() => {
         if (play) {
             videoElement.target.pauseVideo();
         } else {
             videoElement.target.playVideo();
         }
         setPlay(prev => !prev);
-    }
+    }, [videoElement, play]);
 
     const _onChange = (event: YouTubePlayer) => {
         switch (event.data) {
@@ -150,13 +168,13 @@ export const SongProvider = ({
         }
     }
 
-    const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         if (videoElement) {
             const time = parseFloat(e.target.value);
             videoElement.target.seekTo(time, true);
-            setSongProgress(prev => ({ x: time }));
+            setSongProgress({ x: time });
         }
-    }
+    }, [videoElement]);
 
     const handleOpenToLargePlayer = () => {
         const playlistId = list?.items![0].snippet?.playlistId as string ?? "";
@@ -194,7 +212,7 @@ export const SongProvider = ({
         },
     };
 
-    const value = {
+    const SongValues = {
         song,
         contextList : list,
         changeSong,
@@ -203,26 +221,52 @@ export const SongProvider = ({
         play,
         handleTogglePlay,
         videoLoading,
-        handleSeek,
         handleSkip,
         handlePrevious,
-        songProgress,
-        duration,
         handleList,
         handlePlayListName,
         handleOpenToLargePlayer,
         resetContext,
     }
 
+
+    const songProgressValues = {
+        songProgress,
+        duration,
+        handleSeek
+    }
     return (
-        <songContext.Provider value={value}>
-            {children}
+        <SongContext.Provider value={SongValues}>
+            <SongProgressContext.Provider value={songProgressValues}>
+                {children}
+            </SongProgressContext.Provider>
             {song && <YouTube
                 videoId={song.snippet?.resourceId?.videoId as string}
                 opts={opts}
                 onReady={_onReady}
                 onStateChange={_onChange}
             />}
-        </songContext.Provider>
+        </SongContext.Provider>
     )
+}
+
+/**
+ * using custom hooks helps with encapsulation
+ * and the null check is better than using ! in the useContext(), which ensures the hook is used within the provider
+ * this helps with simplicity instead of importing useContext() and the context
+ * 
+ */
+
+export const useSongProgressContext = () => {
+    const context = useContext(SongProgressContext);
+    if(context === null) throw new Error('useSongProgress must be used within a SongProvider');
+
+    return context;
+}
+
+export const useSongContext = () => {
+    const context = useContext(SongContext);
+    if(context === null) throw new Error('useSongProgress must be used within a SongProvider');
+
+    return context;
 }

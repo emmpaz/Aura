@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import YouTubeSongPlayer from "../Players/YoutubePlayer";
 import { useSearchParams } from "next/navigation";
-import { songContext } from "@/app/lib/SongContext";
+import {useSongContext } from "@/app/lib/SongContext";
 
 export default function MusicList(
   {
@@ -23,7 +23,7 @@ export default function MusicList(
   
   const {song, 
     changeSong,
-    handleList, handlePlayListName} = useContext(songContext)!;
+    handleList, handlePlayListName} = useSongContext();
 
   const [list, setList] = useState<youtube_v3.Schema$PlaylistItemListResponse | null>(musicList ?? null);
 
