@@ -1,11 +1,11 @@
 'use client'
 
-import { useSongContext } from "@/app/lib/SongContext"
+import { useSongContext } from "@/app/lib/SongContextProvider"
 import { youtube_v3 } from "googleapis";
 import { useContext } from "react"
 import { IoIosArrowUp, IoMdPause, IoMdPlay } from "react-icons/io";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
-import ProgressBar from "../Miscillanious/ProgressBar";
+import ProgressBar from "../Misc/ProgressBar";
 
 
 export default function BottomPlayer() {

@@ -5,14 +5,14 @@ import { getGeneralPlaylists, getList, getPopularPlaylists, get_mixes, get_playl
 import { youtube_v3 } from "googleapis";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import MusicList from "./components/playlist/MusicList";
+import MusicList from "./components/Playlist/MusicList";
 import { getAccessToken, getSession } from "@auth0/nextjs-auth0";
-import LinkYoutubeButton from "./components/home/YouTubeLink";
+import LinkYoutubeButton from "./components/Home/YouTubeLink";
 import Navigation from "./components/Common/Nav";
-import PlaylistList from "./components/home/PlaylistList";
+import PlaylistList from "./components/Home/PlaylistList";
 import { storeGoogleRefreshToken } from "./actions/auth0.action";
 import { cookies } from "next/headers";
-import LinkYoutube from "./components/home/YouTubeLink";
+import LinkYoutube from "./components/Home/YouTubeLink";
 import BottomPlayer from "./components/Players/BottomPlayer";
 
 export default async function Home() {

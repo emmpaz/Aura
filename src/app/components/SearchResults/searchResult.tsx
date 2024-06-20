@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchContext } from "@/app/lib/SearchContext"
-import { useSongContext } from "@/app/lib/SongContext";
+import { useSongContext } from "@/app/lib/SongContextProvider";
 import { youtube_v3 } from "googleapis";
 import { useContext } from "react"
 

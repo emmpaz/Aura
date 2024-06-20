@@ -1,7 +1,7 @@
 import { getList, hasYouTubeTokenANDValid } from "@/app/actions/youtube.action";
-import MusicList from "@/app/components/playlist/MusicList";
+import MusicList from "@/app/components/Playlist/MusicList";
 import Navigation from "@/app/components/Common/Nav";
-import LinkYoutubeButton from "@/app/components/home/YouTubeLink";
+import LinkYoutubeButton from "@/app/components/Home/YouTubeLink";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function Page({params} : {params : {id : string}}) {

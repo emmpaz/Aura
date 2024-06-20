@@ -1,12 +1,12 @@
 'use client'
-import { useSongContext } from "@/app/lib/SongContext";
+import { useSongContext } from "@/app/lib/SongContextProvider";
 import { correctImage } from "@/app/lib/helpers";
 import { youtube_v3 } from "googleapis";
 import { useSearchParams } from "next/navigation";
 import { memo, useContext, useMemo} from "react";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
-import ProgressBar from "../Miscillanious/ProgressBar";
+import ProgressBar from "../Misc/ProgressBar";
 
 const YouTubeSongPlayer = memo(() => {
 
@@ -42,8 +42,6 @@ const YouTubeSongPlayer = memo(() => {
             )
         }
     }
-
-    console.log('dsadasds');
 
     const getThumbnail = useMemo(() => {
         if(fromSearch && contextList?.items && contextList.items.length > 0){

@@ -27,3 +27,15 @@ export const correctImage = (
 
     return playlistItemThumbnail.default?.url ?? "";
 }
+
+export const formatTime = (time : number) => {
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = Math.floor(time % 60);
+
+    const parts : string[] = [];
+
+    parts.push(minutes.toString().padStart(2, '0'));
+    parts.push(seconds.toString().padStart(2, '0'));
+
+    return parts.join(':');
+}

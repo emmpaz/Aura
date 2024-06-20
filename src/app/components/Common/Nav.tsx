@@ -4,8 +4,9 @@ import { FaSignOutAlt, FaUnlink } from "react-icons/fa"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useContext } from "react"
-import { useSongContext } from "@/app/lib/SongContext"
+import { useSongContext } from "@/app/lib/SongContextProvider"
 import { useSearchContext } from "@/app/lib/SearchContext"
+import { resetContexts } from "@/app/lib/ResetContext"
 
 
 
@@ -18,17 +19,13 @@ export default function Navigation({
     const router = useRouter();
 
     const {
-        resetContext
-    } = useSongContext();
-
-    const {
         handleSearchValue,
         searchResult,
     } = useSearchContext();
 
 
     const handleUnLink = async () => {
-        resetContext();
+        resetContexts();
         await deleteGoogleRefreshToken();
         router.push('/');
     }

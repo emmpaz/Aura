@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Chivo } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { SongProvider } from "./lib/SongContext";
+import { SongProvider } from "./lib/SongContextProvider";
 import { SearchProvider } from "./lib/SearchContext";
 
 const chiv = Chivo({ subsets: ["latin"] });
@@ -25,7 +25,9 @@ export default function RootLayout({
       <UserProvider>
         <SongProvider>
           <SearchProvider>
-            <body className={chiv.className}>{children}</body>
+            <body className={chiv.className}>
+              {children}
+              </body>
           </SearchProvider>
         </SongProvider>
       </UserProvider>

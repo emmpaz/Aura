@@ -3,7 +3,15 @@ import { google } from "googleapis"
 import { cookies } from "next/headers"
 import { getRefreshTokenFromMetaData } from "./auth0.action"
 import { createOAuth2Client } from "../lib/youtube";
+import NodeCache from "node-cache";
+import Bottleneck from "bottleneck";
 
+const cache = new NodeCache({stdTTL: 600});
+
+const limiter = new Bottleneck({
+    minTime: 100,
+    maxConcurrent: 1
+});
 
 export async function hasYouTubeTokenANDValid(){
     const token = await getRefreshTokenFromMetaData();
@@ -119,6 +127,12 @@ export const get_mixes = async () => {
 
 
 export const searchYoutube = async (input : string) => {
+    
+    const cacheKey = `youtube_search_${input}`;
+    const cachedResult = cache.get(cacheKey);
+
+    if(cachedResult) return cachedResult;
+
     const refresh = await getRefreshTokenFromMetaData();
     const oauth2Client = await createOAuth2Client();
 
@@ -138,15 +152,26 @@ export const searchYoutube = async (input : string) => {
 
     if(!access.token) return null;
 
-    const res = await youtube.search.list({
-        part:['snippet'],
-        q: input,
-        type: ['video'],
-        access_token: access.token,
-        maxResults: 10
-    })
+    const rateLimited = limiter.wrap(async () => {
+        const res = await youtube.search.list({
+            part:['snippet'],
+            q: input,
+            type: ['video'],
+            access_token: access.token as string,
+            maxResults: 10
+        });
+        return res.data;
+    });
 
-    return res.data;
+    try{
+        const result = await rateLimited();
+
+        cache.set(cacheKey, result);
+
+        return result;
+    }catch(error){
+        return null
+    }
 }
 
 export const generateNewPlaylist = async (videoID : string) => {

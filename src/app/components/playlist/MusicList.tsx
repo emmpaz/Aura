@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import YouTubeSongPlayer from "../Players/YoutubePlayer";
 import { useSearchParams } from "next/navigation";
-import {useSongContext } from "@/app/lib/SongContext";
+import {useSongContext } from "@/app/lib/SongContextProvider";
 
 export default function MusicList(
   {
@@ -54,7 +54,7 @@ export default function MusicList(
           <div className=" p-5">
             <p className="font-medium text-4xl text-pretty truncate">{playlist_name}</p>
           </div>
-        <div className="flex flex-col p-5 max-h-[500px] overflow-y-auto">
+        <div className={`flex flex-col p-5 ${(song) ? 'max-h-[500px] overflow-y-auto' : ''}`}>
           {list?.items?.map((im) => (
             // <div className="mx-auto overflow-hidden w-[200px] h-[200px] m-4 rounded-md" key={im.id}>
             //   <img
