@@ -14,6 +14,7 @@ import { storeGoogleRefreshToken } from "./actions/auth0.action";
 import { cookies } from "next/headers";
 import LinkYoutube from "./components/Home/YouTubeLink";
 import BottomPlayer from "./components/Players/BottomPlayer";
+import JustPlay from "./components/Home/JustPlay";
 
 export default async function Home() {
   const playlists = await get_playlists();
@@ -25,6 +26,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen w-full bg-[#3B4131] flex flex-col">
       <Navigation isLinked={isLinked}/>
+      <JustPlay/>
       <PlaylistList list={playlists} genre={genre} test={test}/>
       <BottomPlayer/>
       {!isLinked && <LinkYoutube/>}

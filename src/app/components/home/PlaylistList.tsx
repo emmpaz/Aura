@@ -2,7 +2,7 @@
 import { youtube_v3 } from "googleapis";
 import Link from "next/link";
 import { useRef } from "react";
-import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft, FaPlay } from "react-icons/fa";
 import { FaChevronRight } from "react-icons/fa6";
 import { IoAccessibilityOutline } from "react-icons/io5";
 
@@ -75,7 +75,7 @@ export default function PlaylistList(
         <div className="w-full flex flex-col pb-10">
             <div className="px-5 py-10">
                 <div className="text-7xl font-medium flex justify-between items-center">
-                    <h1>Get to work</h1>
+                    <h1>Simple</h1>
                     <div className="flex">
                         <FaChevronLeft
                             onClick={() => scroll(workRef, 'left')}
@@ -98,9 +98,7 @@ export default function PlaylistList(
                             </div>
                         </div>
                     ))}
-                    <div className="">
-                        <IoAccessibilityOutline size={35}/>
-                    </div>
+                    
                 </div>
             </div>
             <div className="px-5 py-10">
@@ -128,9 +126,7 @@ export default function PlaylistList(
                             </div>
                         </div>
                     ))}
-                    <div className="">
-                        <IoAccessibilityOutline size={35}/>
-                    </div>
+                    
                 </div>
             </div>
             <div className="px-5 py-10">
